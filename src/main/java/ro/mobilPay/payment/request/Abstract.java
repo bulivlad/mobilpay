@@ -19,6 +19,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -30,6 +31,7 @@ import ro.mobilPay.util.ListItem;
 import ro.mobilPay.util.MD5;
 import ro.mobilPay.util.OpenSSL;
 
+@Slf4j
 public abstract class Abstract {
 	protected static final String PAYMENT_TYPE_SMS	= "sms";
 	protected static final String PAYMENT_TYPE_CARD	= "card";
@@ -94,7 +96,7 @@ public abstract class Abstract {
 			this._requestIdentifier = MD5.hash(""+(int)(Math.random()*1000000));
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("", e);
 		}
 		
 	}
@@ -110,13 +112,13 @@ public abstract class Abstract {
 			doc = docBuilder.parse(is);
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("", e);
 		} catch (SAXException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("", e);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("", e);
 		}
 		Abstract a=null;
 		if(doc != null){
@@ -128,7 +130,7 @@ public abstract class Abstract {
 					a._setRequestInfo(Abstract.VERSION_XML,data);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error("", e);
 			}
 			
 			
@@ -171,7 +173,7 @@ public abstract class Abstract {
 	}
 	
 	protected static Abstract __factoryFromQueryString(String _data) {
-		System.err.println("__factoryFromQueryString not implemented");
+		log.error("__factoryFromQueryString not implemented");
 		return null;
 	}
 	
@@ -180,7 +182,7 @@ public abstract class Abstract {
 		//String prvkey=null;
 		
 		String data = OpenSSL.openssl_unseal(_encData, _envKey, _privateKey);
-		System.out.println("data is :"+data);
+		log.info("data is :{}", data);
 		return Abstract.factory(data);
 	}
 	
@@ -230,7 +232,6 @@ public abstract class Abstract {
 			}
 		}
 		
-		//HashMap<String,String> params = new HashMap<String,String>();
 		NodeList paramElems = _elem.getElementsByTagName("params");
 		if(paramElems.getLength() == 1){
 			paramElems = paramElems.item(0).getChildNodes(); //should get all the <param> nodes inside <params>
@@ -255,20 +256,18 @@ public abstract class Abstract {
 		for(int i=0;i<nl.getLength();i++) {
 			String name = nl.item(i).getNodeName();
 			String value = nl.item(i).getTextContent();
-			//System.out.println("name is "+name+" and value is "+value);
 			if(name.compareToIgnoreCase("name")==0) {
 				strName = value;
 			} else if (name.compareToIgnoreCase("value")==0 && value != null) {
 				try {
-					//System.out.println("Decoding:"+value);
 					strValue = java.net.URLDecoder.decode(value,"UTF-8");
 				} catch (UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					log.error("", e);
 				}
 			}
 		}
-		System.out.println("name is "+strName+" and value is "+strValue);
+		log.info("name is {} and value is {}", strName, strValue);
 		return new AbstractMap.SimpleEntry<String,String>(strName, strValue);
 		
 	}
@@ -335,7 +334,6 @@ public abstract class Abstract {
 		transformer.transform(source, result);
 		writer.close();
 		String srcData = writer.toString();
-		//System.out.println("srcData:"+srcData);
 		return OpenSSL.openssl_seal(_certificateAsString, srcData);
 	}
 

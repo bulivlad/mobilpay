@@ -8,12 +8,13 @@ import java.util.Date;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import ro.mobilPay.payment.Invoice;
 
-
+@Slf4j
 public class Card extends Abstract {
 	
 	private final int ERROR_LOAD_FROM_XML_ORDER_INVOICE_ELEM_MISSING	= 0x30000001;
@@ -33,7 +34,6 @@ public class Card extends Abstract {
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		this._xmlDoc = builder.newDocument();
 		Element rootElem = this._xmlDoc.createElement("order");
-		//this._xmlDoc.appendChild(rootElem);
 		//set payment type attribute
 		
 		rootElem.setAttribute("type", this._type);
@@ -58,7 +58,6 @@ public class Card extends Abstract {
 				Element xmlParam = this._xmlDoc.createElement("param");
 				Element xmlName = this._xmlDoc.createElement("name");
 				Element xmlValue = this._xmlDoc.createElement("value");
-				//xmlName.setNodeValue(key);
 				xmlName.setTextContent(key);
 				xmlValue.appendChild(this._xmlDoc.createCDATASection(this._objRequestParams.get(key)));
 				xmlParam.appendChild(xmlName);
@@ -91,7 +90,7 @@ public class Card extends Abstract {
 			super._parseFromXml(_elem);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("", e);
 			return false;
 		}
 		NodeList elems = _elem.getElementsByTagName("invoice");

@@ -42,7 +42,7 @@ public class Invoice {
 		if(attr == null)
 			throw new Exception("Mobilpay_Payment_Invoice::loadFromXml failed; currency attribute missing " + Invoice.ERROR_LOAD_FROM_XML_CURRENCY_ATTR_MISSING); 
 
-		this._currency = new String (attr.getNodeValue());
+		this._currency = attr.getNodeValue();
 		
 		attr = _elem.getAttributes().getNamedItem("amount");
 		if(attr != null)
@@ -59,7 +59,7 @@ public class Invoice {
 		
 		NodeList elems = _elem.getElementsByTagName("details");
 		if(elems.getLength() == 1) {
-			this._details = new String(elems.item(0).getTextContent());
+			this._details = elems.item(0).getTextContent();
 		}
 		
 		elems = _elem.getElementsByTagName("contact_info");
@@ -77,7 +77,7 @@ public class Invoice {
 			}
 		}
 		
-		this._items = new ArrayList<Item>();
+		this._items = new ArrayList<>();
 		elems = _elem.getElementsByTagName("items");
 		if(elems.getLength() == 1) {
 			Element itemElems = (Element)elems.item(0);
@@ -92,7 +92,7 @@ public class Invoice {
 				this._amount = amount;
 			}
 		}
-		this._exchangeRates = new ArrayList<ExchangeRate>();
+		this._exchangeRates = new ArrayList<>();
 		elems = _elem.getElementsByTagName("exchange_rates");
 		if(elems.getLength() == 1) {
 			Element rateElems = (Element)elems.item(0);
@@ -116,21 +116,17 @@ public class Invoice {
 		xmlInvElem.setAttribute("currency", this._currency);
 		if(this._amount > 0) {
 			xmlInvElem.setAttribute("amount",String.format(java.util.Locale.US,"%.02f", this._amount));
-
-				
 		}
-		
+
 		if(this._installments > 0) {
 			xmlInvElem.setAttribute("installments",""+this._installments);
-			
 		}
 		
 		if(this._selectedInstallments > 0) {
 			xmlInvElem.setAttribute("selected_installments",""+this._selectedInstallments);
-
-			
 		}
-		Element xmlElem,xmlAddr;
+		Element xmlElem;
+		Element xmlAddr;
 		
 		if(this._details != null) {
 			xmlElem = _xmlDoc.createElement("details");
@@ -149,11 +145,11 @@ public class Invoice {
 		}
 		xmlInvElem.appendChild(xmlAddr);
 		
-		if(this._items != null && this._items.size() > 0) {
+		if(this._items != null && !this._items.isEmpty()) {
 			Element xmlItems = _xmlDoc.createElement("items");
 			Item[] items = (Item[])this._items.toArray();
 			for(int i=0; i< items.length; i++) {
-				Element xmlItem = ((Item)items[i]).createXmlElement(_xmlDoc);
+				Element xmlItem = items[i].createXmlElement(_xmlDoc);
 				xmlItems.appendChild(xmlItem);
 			}
 			xmlInvElem.appendChild(xmlItems);

@@ -2,15 +2,20 @@ package ro.mobilPay.payment;
 
 import java.io.UnsupportedEncodingException;
 
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+@Slf4j
+@NoArgsConstructor
 public class Address {
 		public final String TYPE_COMPANY = "company";
 	    public final String TYPE_PERSON = "person";
-	    
+	    private final String ENC = "UTF-8";
+
 	    public final int ERROR_INVALID_PARAMETER = 0x11100001;
 	    public final int ERROR_INVALID_ADDRESS_TYPE = 0x11100002;
 	    public final int ERROR_INVALID_ADDRESS_TYPE_VALUE = 0x11100003;
@@ -29,17 +34,13 @@ public class Address {
 	    public String _mobilePhone = null;
 	    public String _bank = null;
 	    public String _iban = null;
-	    
+
 	    public Address(Node n){
 	    	if(n != null) {
 	    		loadFromXML(n);
 	    	}
 	    }
-	    
-	    public Address () {
-	    	
-	    }
-	    
+
 	    protected boolean loadFromXML(Node n)  {
 	    	//$attr = $elem->attributes->getNamedItem('type');
 	    	Node tmpNode = null;
@@ -49,71 +50,70 @@ public class Address {
 	    		this._type = tmpNode.getNodeValue();
 	    	else
 	    		this._type = this.TYPE_PERSON;
-	    	
+
 	    	try {
 	    		tmpList = ((Element)n).getElementsByTagName("first_name");
-		    	if(tmpList.getLength() == 1) {
-		    		//System.out.println("tmplist0:"+tmpList.item(0).getNodeValue()+":"+tmpList.item(0).getTextContent()+":");
-		    		this._firstName = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(),"UTF-8");
+				if(tmpList.getLength() == 1) {
+		    		this._firstName = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(), ENC);
 		    	}
 		    	tmpList = ((Element)n).getElementsByTagName("last_name");
 		    	if(tmpList.getLength() == 1)
-		    		this._lastName = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(),"UTF-8");
-		    	
+		    		this._lastName = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(), ENC);
+
 		    	tmpList = ((Element)n).getElementsByTagName("fiscal_number");
 		    	if(tmpList.getLength() == 1)
-		    		this._fiscalNumber = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(),"UTF-8");
-		    	
+		    		this._fiscalNumber = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(), ENC);
+
 		    	tmpList = ((Element)n).getElementsByTagName("identity_number");
 		    	if(tmpList.getLength() == 1)
-		    		this._identityNumber = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(),"UTF-8");
+		    		this._identityNumber = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(), ENC);
 
 		    	tmpList = ((Element)n).getElementsByTagName("country");
 		    	if(tmpList.getLength() == 1)
-		    		this._country = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(),"UTF-8");
+		    		this._country = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(), ENC);
 
 		    	tmpList = ((Element)n).getElementsByTagName("county");
 		    	if(tmpList.getLength() == 1)
-		    		this._county = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(),"UTF-8");
+		    		this._county = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(), ENC);
 
 		    	tmpList = ((Element)n).getElementsByTagName("city");
 		    	if(tmpList.getLength() == 1)
-		    		this._city = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(),"UTF-8");
+		    		this._city = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(), ENC);
 
 		    	tmpList = ((Element)n).getElementsByTagName("zip_code");
 		    	if(tmpList.getLength() == 1)
-		    		this._zipCode = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(),"UTF-8");
-		    	
+		    		this._zipCode = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(), ENC);
+
 		    	tmpList = ((Element)n).getElementsByTagName("address");
 		    	if(tmpList.getLength() == 1)
-		    		this._address = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(),"UTF-8");
-		    	
+		    		this._address = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(), ENC);
+
 		    	tmpList = ((Element)n).getElementsByTagName("email");
 		    	if(tmpList.getLength() == 1)
-		    		this._email = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(),"UTF-8");
-		    	
+		    		this._email = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(), ENC);
+
 		    	tmpList = ((Element)n).getElementsByTagName("mobile_phone");
 		    	if(tmpList.getLength() == 1)
-		    		this._mobilePhone = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(),"UTF-8");
-		    	
+		    		this._mobilePhone = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(), ENC);
+
 		    	tmpList = ((Element)n).getElementsByTagName("bank");
 		    	if(tmpList.getLength() == 1)
-		    		this._bank = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(),"UTF-8");
-		    	
+		    		this._bank = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(), ENC);
+
 		    	tmpList = ((Element)n).getElementsByTagName("iban");
 		    	if(tmpList.getLength() == 1)
-		    		this._iban = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(),"UTF-8");
-		    	
-		    	
+		    		this._iban = java.net.URLDecoder.decode(tmpList.item(0).getTextContent(), ENC);
+
+
 		    } catch (UnsupportedEncodingException e) {
-		    	System.err.println(e.getMessage());
+	    		log.error(e.getMessage(), e);
 		    	return false;
 		    }
-	    	
-	    	
+
+
 	    	return true;
 	    }
-	    
+
 	    public Element createXMLElement(Document d, String nodeName) throws Exception {
 	    	if(!(d instanceof org.w3c.dom.Document)) {
 	    		throw new Exception("ERROR "+this.ERROR_INVALID_PARAMETER);
@@ -123,11 +123,11 @@ public class Address {
 	    	}
 	    	if(this._type != this.TYPE_COMPANY && this._type != this.TYPE_PERSON)
 	    		throw new Exception("ERROR TYPE VALUE "+this.ERROR_INVALID_ADDRESS_TYPE_VALUE);
-	    	
+
 
 	    	Element elem = d.createElement(nodeName);
 	    	elem.setAttribute("type", this._type);
-	    		    	
+
 	    	if(this._firstName != null) {
 	    		Element xElem = d.createElement("first_name");
 	    		xElem.appendChild(d.createCDATASection(java.net.URLEncoder.encode(this._firstName,"UTF-8")));
@@ -139,55 +139,55 @@ public class Address {
 	    		xElem.appendChild(d.createCDATASection(java.net.URLEncoder.encode(this._lastName,"UTF-8")));
 	    		elem.appendChild(xElem);
 	    	}
-	    	
+
 	    	if(this._fiscalNumber != null) {
 	    		Element xElem = d.createElement("fiscal_number");
 	    		xElem.appendChild(d.createCDATASection(java.net.URLEncoder.encode(this._fiscalNumber,"UTF-8")));
 	    		elem.appendChild(xElem);
 	    	}
-	    	
+
 	    	if(this._identityNumber != null) {
 	    		Element xElem = d.createElement("identity_number");
 	    		xElem.appendChild(d.createCDATASection(java.net.URLEncoder.encode(this._identityNumber,"UTF-8")));
 	    		elem.appendChild(xElem);
 	    	}
-	    	
+
 	    	if(this._country != null) {
 	    		Element xElem = d.createElement("country");
 	    		xElem.appendChild(d.createCDATASection(java.net.URLEncoder.encode(this._country,"UTF-8")));
 	    		elem.appendChild(xElem);
 	    	}
-	    	
+
 	    	if(this._county != null) {
 	    		Element xElem = d.createElement("county");
 	    		xElem.appendChild(d.createCDATASection(java.net.URLEncoder.encode(this._county,"UTF-8")));
 	    		elem.appendChild(xElem);
 	    	}
-	    	
+
 	    	if(this._city != null) {
 	    		Element xElem = d.createElement("city");
 	    		xElem.appendChild(d.createCDATASection(java.net.URLEncoder.encode(this._city,"UTF-8")));
 	    		elem.appendChild(xElem);
 	    	}
-	    	
+
 	    	if(this._zipCode != null) {
 	    		Element xElem = d.createElement("zip_code");
 	    		xElem.appendChild(d.createCDATASection(java.net.URLEncoder.encode(this._zipCode,"UTF-8")));
 	    		elem.appendChild(xElem);
 	    	}
-	    	
+
 	    	if(this._address != null) {
 	    		Element xElem = d.createElement("address");
 	    		xElem.appendChild(d.createCDATASection(java.net.URLEncoder.encode(this._address,"UTF-8")));
 	    		elem.appendChild(xElem);
 	    	}
-	    	
+
 	    	if(this._email != null) {
 	    		Element xElem = d.createElement("email");
 	    		xElem.appendChild(d.createCDATASection(java.net.URLEncoder.encode(this._email,"UTF-8")));
 	    		elem.appendChild(xElem);
 	    	}
-	    	
+
 	    	if(this._mobilePhone != null) {
 	    		Element xElem = d.createElement("mobile_phone");
 	    		xElem.appendChild(d.createCDATASection(java.net.URLEncoder.encode(this._mobilePhone,"UTF-8")));
@@ -199,7 +199,7 @@ public class Address {
 	    		xElem.appendChild(d.createCDATASection(java.net.URLEncoder.encode(this._bank,"UTF-8")));
 	    		elem.appendChild(xElem);
 	    	}
-	    	
+
 	    	if(this._iban != null) {
 	    		Element xElem = d.createElement("iban");
 	    		xElem.appendChild(d.createCDATASection(java.net.URLEncoder.encode(this._iban,"UTF-8")));
